@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Accueil = () => {
-  const [activeTab, setActiveTab] = useState('Accueil');
-
+const Accueil = ({ navigation }) => {
   const images = [
     { source: require('../assets/images/mercede.png'), name: 'Mercedes' },
     { source: require('../assets/images/kia.jpg'), name: 'Kia' },
@@ -20,22 +18,38 @@ const Accueil = () => {
     { source: require('../assets/images/mercedesgla.jpg'), name: 'Mercedes GLA' },
   ];
 
+  const carouselImages = [
+    { source: require('../assets/images/carrousel1.png'), name: 'Keita business auto' },
+    { source: require('../assets/images/carrousel2.png'), name: 'Carbox-ml' },
+    { source: require('../assets/images/carrousel3.jpg'), name: 'G-T- Djiguiya auto services' },
+    { source: require('../assets/images/carrousel4.jpg'), name: 'Damba auto' },
+  ];
+
   const handleImagePress = (index, type) => {
     console.log('Image cliquée:', index, 'Type:', type);
   };
 
+  const scrollViewRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const scrollLeft = () => {
+    if (scrollViewRef.current) {
+      const newScrollPosition = Math.max(0, scrollPosition - 300);
+      scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+      setScrollPosition(newScrollPosition);
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollViewRef.current) {
+      const newScrollPosition = scrollPosition + 300;
+      scrollViewRef.current.scrollTo({ x: newScrollPosition, animated: true });
+      setScrollPosition(newScrollPosition);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require('../assets/images/gris.jpg')}
-          style={{ width: 50, height: 50 }}
-        />
-        <TouchableOpacity style={styles.notificationIcon}>
-          <Icon name="notifications-outline" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.searchBarContainer}>
         <Icon name="search-outline" size={30} color="#999" style={styles.searchIcon} />
         <TextInput
@@ -45,6 +59,31 @@ const Accueil = () => {
         />
         <TouchableOpacity style={styles.sortButton}>
           <Icon name="filter-outline" size={30} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.carouselContainer}>
+      
+        <TouchableOpacity style={styles.arrowButton} onPress={scrollLeft}>
+          <Icon name="chevron-back-outline" size={30} color="#fff" />
+        </TouchableOpacity>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ref={scrollViewRef}
+          style={styles.carouselScrollView}
+          onScroll={(event) => setScrollPosition(event.nativeEvent.contentOffset.x)}
+          scrollEventThrottle={16}
+        >
+          {carouselImages.map((item, index) => (
+            <View key={index} style={styles.carouselItem}>
+              <Image source={item.source} style={styles.carouselImage} />
+              <Text style={styles.carouselText}>{item.name}</Text>
+            </View>
+          ))}
+        </ScrollView>
+        <TouchableOpacity style={styles.arrowButton} onPress={scrollRight}>
+          <Icon name="chevron-forward-outline" size={30} color="#fff" />
         </TouchableOpacity>
       </View>
 
@@ -62,16 +101,14 @@ const Accueil = () => {
             contentContainerStyle={styles.scrollViewContent}
           >
             {images.map((item, index) => (
-              <View key={index} style={styles.imageContainer}>
-                <TouchableOpacity onPress={() => handleImagePress(index, 'first')}>
-                  <View style={styles.imageWrapper}>
-                    <Image source={item.source} style={styles.scrollImage} />
-                    <View style={styles.imageOverlay}>
-                      <Text style={styles.imageLabel}>{item.name}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity key={index} style={styles.imageContainer} onPress={() => handleImagePress(index, 'first')}>
+                <View style={styles.imageWrapper}>
+                  <Image source={item.source} style={styles.scrollImage} />
+                </View>
+                <View style={styles.imageOverlay}>
+                  <Text style={styles.imageLabel}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
 
@@ -82,6 +119,7 @@ const Accueil = () => {
             </TouchableOpacity>
           </View>
 
+          {/* Placer le deuxième ScrollView ici */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -89,46 +127,19 @@ const Accueil = () => {
             contentContainerStyle={styles.scrollViewContent}
           >
             {moreImages.map((item, index) => (
-              <View key={index} style={styles.imageContainer}>
-                <TouchableOpacity onPress={() => handleImagePress(index, 'second')}>
-                  <View style={styles.imageWrapper}>
-                    <Image source={item.source} style={styles.scrollImageLarge} />
-                    <View style={styles.imageOverlay}>
-                      <Text style={styles.imageLabel}>{item.name}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity key={index} style={styles.imageContainerLarge} onPress={() => handleImagePress(index, 'second')}>
+                <View style={styles.imageWrapperLarge}>
+                  <Image source={item.source} style={styles.scrollImageLarge} />
+                </View>
+                <View style={styles.imageOverlay}>
+                  <Text style={styles.imageLabel}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
       </View>
-
-      <View style={styles.bottomIcons}>
-        {renderNavIcon('home-outline', 'Accueil', activeTab, setActiveTab)}
-        {renderNavIcon('cart-outline', 'Vente', activeTab, setActiveTab)}
-        {renderNavIcon('car-outline', 'Parking', activeTab, setActiveTab)}
-        {renderNavIcon('chatbox-outline', 'Messages', activeTab, setActiveTab)}
-        {renderNavIcon('person-outline', 'Profil', activeTab, setActiveTab)}
-      </View>
     </View>
-  );
-};
-
-const renderNavIcon = (iconName, label, activeTab, setActiveTab) => {
-  const isActive = activeTab === label;
-  const iconStyle = isActive ? styles.activeIcon : styles.inactiveIcon;
-  const labelStyle = isActive ? styles.activeIconLabel : styles.inactiveIconLabel;
-
-  return (
-    <TouchableOpacity
-      style={[styles.navIcon, isActive && styles.activeNavIcon]}
-      onPress={() => setActiveTab(label)}
-      key={label}
-    >
-      <Icon name={iconName} size={24} style={iconStyle} />
-      <Text style={labelStyle}>{label}</Text>
-    </TouchableOpacity>
   );
 };
 
@@ -137,18 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f4f3f3',
     padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  mainContent: {
-    flex: 1,
-  },
-  notificationIcon: {
-    marginLeft: 10,
   },
   searchBarContainer: {
     flexDirection: 'row',
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 10,
     marginVertical: 10,
+    marginBottom:20,
   },
   searchIcon: {
     marginRight: 10,
@@ -175,46 +175,52 @@ const styles = StyleSheet.create({
     backgroundColor: '#FD6A00',
     marginLeft: 10,
   },
-  bottomIcons: {
+  carouselContainer: {
+    height: 150,
+    marginBottom: 20,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 2,
-    borderColor: '#FE7614',
-  },
-  navIcon: {
     alignItems: 'center',
   },
-  activeNavIcon: {
+  carouselScrollView: {
+    flex: 1,
+  },
+  arrowButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
     backgroundColor: '#FD6A00',
-    borderRadius: 30,
-    paddingVertical: 5,
+    marginHorizontal: 5,
+  },
+  carouselItem: {
+    width: 300,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  carouselImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  carouselText: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    color: '#fff',
+    fontSize: 14,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
   },
-  activeIcon: {
-    color: '#fff',
-  },
-  inactiveIcon: {
-    color: '#888',
-  },
-  activeIconLabel: {
-    color: '#fff',
-    marginTop: 5,
-    fontSize: 14,
-  },
-  inactiveIconLabel: {
-    color: '#888',
-    marginTop: 5,
-    fontSize: 14,
+  mainContent: {
+    flex: 1,
   },
   scrollContainer: {
-    paddingBottom: 30, // Add padding to avoid touching bottom navigation
+    paddingBottom: 0,
   },
   scrollSection: {
     backgroundColor: '#ffffff',
@@ -243,45 +249,57 @@ const styles = StyleSheet.create({
     backgroundColor: '#FD6A00',
   },
   imageScrollView: {
-    height: 110,
-    marginBottom: 20, // Add margin between scroll views and other content
-  },
-  scrollViewContent: {
-    alignItems: 'center',
-    paddingHorizontal: 10,
+    height: 150,
+    marginBottom: 20,
   },
   imageContainer: {
-    alignItems: 'center',
-    marginHorizontal: 5,
+    width: 100,
+    padding: 5,
+    borderRadius: 10,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: '#F4F3F3',
+  },
+  imageContainerLarge: {
+    width: 160,
+    padding: 5,
+    borderRadius: 10,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: '#F4F3F3',
   },
   imageWrapper: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollImage: {
-    width: 110,
+    width: '100%',
     height: 60,
     borderRadius: 10,
+    overflow: 'hidden',
   },
-  scrollImageLarge: {
-    width: 160,
-    height: 100,
+  imageWrapperLarge: {
+    width: '100%',
+    height: 90,
     borderRadius: 10,
+    overflow: 'hidden',
   },
-  imageOverlay: {
-    position: 'absolute',
+  scrollImage: {
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
+  },
+  scrollImageLarge: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  imageOverlay: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent background
-    borderRadius: 10,
+    paddingVertical: 5,
   },
   imageLabel: {
-    color: '#fff',
-    fontSize: 12,
-    textAlign: 'center',
+    color: '#000',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 5,
   },
 });
 

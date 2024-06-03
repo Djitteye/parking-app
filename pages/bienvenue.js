@@ -58,3 +58,52 @@ const styles = StyleSheet.create({
 });
 
 export default Bienvenue;
+
+
+
+
+/*
+// TabNavigator.js
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import Accueil from './pages/accueil';
+import Reservation from './pages/reservation';
+import AutresEcrans from './pages/autresEcrans'; // Importez d'autres écrans selon vos besoins
+
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Accueil') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Reservation') {
+            iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'AutresEcrans') {
+            iconName = focused ? 'apps' : 'apps-outline';
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: '#FD6A00',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen name="Accueil" component={Accueil} />
+      <Tab.Screen name="Reservation" component={Reservation} />
+      <Tab.Screen name="AutresEcrans" component={AutresEcrans} />
+    </Tab.Navigator>
+  );
+};
+
+export default TabNavigator;
+
+
+
+*/ 
