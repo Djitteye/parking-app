@@ -19,7 +19,7 @@ const Profil = () => {
       lastName: "Djitteye",
       phoneNumber: "79919122",
       email: "abdoulayedjitteye5@email.com",
-      profileImage: require('../assets/images/blanc.jpg') // Assurez-vous que le chemin est correct
+      profileImage: require('../assets/images/sn.jpg') // Assurez-vous que le chemin est correct
     });
   };
 
