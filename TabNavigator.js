@@ -34,13 +34,15 @@ const TabNavigator = () => {
           },
           tabBarActiveTintColor: '#FD6A00',
           tabBarInactiveTintColor: 'black',
+          
+         
           headerShown: false,
         })}
       >
         <Tab.Screen name="Accueil" component={Accueil} />
         <Tab.Screen name="Reservation" component={Reservation} />
-        <Tab.Screen name="Messages" component={Messages} />
         <Tab.Screen name="Parking" component={Parking} />
+        <Tab.Screen name="Messages" component={Messages} />
         <Tab.Screen name="Profil" component={Profil} />
       </Tab.Navigator>
     </>

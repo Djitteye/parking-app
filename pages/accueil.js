@@ -12,10 +12,10 @@ const Accueil = ({ navigation }) => {
   ];
 
   const moreImages = [
-    { source: require('../assets/images/toyota1.png'), name: 'Prado 4X4' },
-    { source: require('../assets/images/kia.png'), name: 'KIA EV6-2022' },
-    { source: require('../assets/images/mercedesbenz.jpg'), name: 'Mercedes Benz' },
-    { source: require('../assets/images/mercedesgla.jpg'), name: 'Mercedes GLA' },
+    { source: require('../assets/images/toyota1.png'), name: 'Prado 4X4', price: '55Millions FCFA' },
+    { source: require('../assets/images/kia.png'), name: 'KIA EV6-2022', price: '35Millions FCFA' },
+    { source: require('../assets/images/mercedesbenz.jpg'), name: 'Mercedes Benz', price: '30Millions FCFA' },
+    { source: require('../assets/images/mercedesgla.jpg'), name: 'Mercedes GLA', price: '30Millions FCFA' },
   ];
 
   const carouselImages = [
@@ -63,7 +63,6 @@ const Accueil = ({ navigation }) => {
       </View>
 
       <View style={styles.carouselContainer}>
-      
         <TouchableOpacity style={styles.arrowButton} onPress={scrollLeft}>
           <Icon name="chevron-back-outline" size={30} color="#fff" />
         </TouchableOpacity>
@@ -114,12 +113,11 @@ const Accueil = ({ navigation }) => {
 
           <View style={styles.scrollTitleContainer}>
             <Text style={styles.scrollTitle}>Pour vous</Text>
-            <TouchableOpacity style={styles.arrowIcon}>
+            <TouchableOpacity style={styles.arrowIcon} onPress={() => navigation.navigate('pourVous')}>
               <Icon name="chevron-forward-outline" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
 
-          {/* Placer le deuxième ScrollView ici */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -133,6 +131,7 @@ const Accueil = ({ navigation }) => {
                 </View>
                 <View style={styles.imageOverlay}>
                   <Text style={styles.imageLabel}>{item.name}</Text>
+                  <Text style={styles.imagePrice}>{item.price}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -201,8 +200,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   carouselImage: {
-    width: '100%',
-    height: '100%',
+    width: 200,
+    height: 200,
     resizeMode: 'cover',
   },
   carouselText: {
@@ -300,6 +299,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginTop: 5,
+  },
+  imagePrice: {
+    color: '#000',
+    fontSize: 12,
+    marginTop: 2,
   },
 });
 
